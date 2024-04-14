@@ -51,11 +51,20 @@ void doJoystickButtonDown(SDL_JoyButtonEvent *event)
 	fprintf(stdout, "[%zu] SDL_JOYBUTTONDOWN\n  Joystick:\t#%i(%i)\n  Button:\t%i\n\n", event->timestamp, i, event->which, event->button);
 	
 	// rumble
-	if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
+	if(event->button == 11 || event->button == 12)
+	//if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
 	{
 		app.rumble[i]++;
 		if(app.rumble[i] == 2)
+		{
 			fprintf(stdout, "[%zu] RUMBLE_ON\n  Joystick:\t#%i(%i)\n\n", event->timestamp, i, event->which);
+			FILE *file;
+			if ((file = fopen("/sys/class/pwm/pwmchip0/pwm0/duty_cycle", "r"))) {
+				system("echo 10 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle > /dev/null");
+			} else if ((file = fopen("/sys/class/pwm/pwmchip1/pwm0/enable", "r"))) {
+				system("echo 0 | sudo tee /sys/class/pwm/pwmchip1/pwm0/enable > /dev/null");
+			}
+		}
 	}
 }
 
@@ -66,11 +75,18 @@ void doJoystickButtonUp(SDL_JoyButtonEvent *event)
 	fprintf(stdout, "[%zu] SDL_JOYBUTTONUP\n  Joystick:\t#%i(%i)\n  Button:\t%i\n\n", event->timestamp, i, event->which, event->button);
 	
 	// rumble
-	if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
+	if(event->button == 11 || event->button == 12)
+	//if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
 	{
 		if(app.rumble[i] == 2)
 			fprintf(stdout, "[%zu] RUMBLE_OFF\n  Joystick:\t#%i(%i)\n\n", event->timestamp, i, event->which);
 		app.rumble[i]--;
+		FILE *file;
+		if ((file = fopen("/sys/class/pwm/pwmchip0/pwm0/duty_cycle", "r"))) {
+			system("echo 1000000 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle > /dev/null");
+		} else if ((file = fopen("/sys/class/pwm/pwmchip1/pwm0/enable", "r"))) {
+			system("echo 1 | sudo tee /sys/class/pwm/pwmchip1/pwm0/enable > /dev/null");
+		}
 	}
 }
 
