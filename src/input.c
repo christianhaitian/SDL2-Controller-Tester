@@ -64,10 +64,15 @@ void doJoystickButtonDown(SDL_JoyButtonEvent *event)
 	int butt_one;
 	int butt_two;
 
-	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick") || file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick"))
 	{
 		butt_one = 14;
 		butt_two = 15;
+	}
+	else if (file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	{
+		butt_one = 14;
+		butt_two = 16;
 	}
 	else if (file_exists("/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"))
 	{
@@ -107,10 +112,15 @@ void doJoystickButtonUp(SDL_JoyButtonEvent *event)
 	int butt_one;
 	int butt_two;
 	
-	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick") || file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick"))
 	{
 		butt_one = 14;
 		butt_two = 15;
+	}
+	else if (file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	{
+		butt_one = 14;
+		butt_two = 16;
 	}
 	else if (file_exists("/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"))
 	{
