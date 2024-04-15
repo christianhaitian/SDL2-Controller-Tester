@@ -1,4 +1,13 @@
 #include "input.h"
+#include <sys/stat.h>
+#include <stdbool.h>
+
+// The following function was adapted from https://stackoverflow.com/a/230070
+// Thanks to codebunny and Adam Liss for the sample code
+bool file_exists (char *filename) {
+  struct stat   buffer;   
+  return (stat (filename, &buffer) == 0);
+}
 
 int getJoyIndex(int id);
 
@@ -51,7 +60,26 @@ void doJoystickButtonDown(SDL_JoyButtonEvent *event)
 	fprintf(stdout, "[%zu] SDL_JOYBUTTONDOWN\n  Joystick:\t#%i(%i)\n  Button:\t%i\n\n", event->timestamp, i, event->which, event->button);
 	
 	// rumble
-	if(event->button == 11 || event->button == 12)
+
+	int butt_one;
+	int butt_two;
+
+	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick") || file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	{
+		butt_one = 14;
+		butt_two = 15;
+	}
+	else if (file_exists("/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"))
+	{
+		butt_one = 8;
+		butt_two = 9;
+	}
+	else
+	{
+		butt_one = 11;
+		butt_two = 12;
+	}
+	if(event->button == butt_one || event->button == butt_two)
 	//if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
 	{
 		app.rumble[i]++;
@@ -75,7 +103,26 @@ void doJoystickButtonUp(SDL_JoyButtonEvent *event)
 	fprintf(stdout, "[%zu] SDL_JOYBUTTONUP\n  Joystick:\t#%i(%i)\n  Button:\t%i\n\n", event->timestamp, i, event->which, event->button);
 	
 	// rumble
-	if(event->button == 11 || event->button == 12)
+
+	int butt_one;
+	int butt_two;
+	
+	if (file_exists("/dev/input/by-path/platform-odroidgo3-joypad-event-joystick") || file_exists("/dev/input/by-path/platform-gameforce-gamepad-event-joystick"))
+	{
+		butt_one = 14;
+		butt_two = 15;
+	}
+	else if (file_exists("/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"))
+	{
+		butt_one = 8;
+		butt_two = 9;
+	}
+	else
+	{
+		butt_one = 11;
+		butt_two = 12;
+	}
+	if(event->button == butt_one || event->button == butt_two)
 	//if(app.haptics[i] != NULL && (event->button == 0 || event->button == 3)) 
 	{
 		if(app.rumble[i] == 2)
